@@ -53,19 +53,23 @@ export function DatebilitySection() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
+  const listWrapperRef = useRef<HTMLDivElement>(null);
+  const listInnerRef = useRef<HTMLDivElement>(null);
   const rowsRef = useRef<(HTMLDivElement | null)[]>([]);
   const progressRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useGSAP(() => {
     const section = sectionRef.current;
-    if (!section) return;
+    const listInner = listInnerRef.current;
+    const listWrapper = listWrapperRef.current;
+    if (!section || !listInner || !listWrapper) return;
 
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: section,
         pin: true,
         start: "top top",
-        end: "+=3000",
+        end: "+=4000",
         scrub: 1,
       },
     });
@@ -86,6 +90,8 @@ export function DatebilitySection() {
     );
 
     const validRows = rowsRef.current.filter(Boolean);
+    const scrollStart = 3;
+
     validRows.forEach((row, i) => {
       tl.from(
         row,
@@ -131,19 +137,35 @@ export function DatebilitySection() {
           );
         }
       }
+
+      if (i >= scrollStart) {
+        const rowEl = validRows[i - scrollStart];
+        if (rowEl) {
+          const scrollAmount = rowEl.offsetHeight + 8;
+          tl.to(
+            listInner,
+            {
+              y: `-=${scrollAmount}`,
+              duration: 0.3,
+              ease: "power1.inOut",
+            },
+            "-=0.3"
+          );
+        }
+      }
     });
   });
 
   return (
     <section
       ref={sectionRef}
-      className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-[#0D0D0D] px-6 py-20"
+      className="relative flex h-dvh flex-col items-center overflow-hidden bg-[#0D0D0D] px-6 pt-10 pb-4 md:justify-center md:py-20"
     >
       {/* Corner accent blocks */}
       <div className="absolute top-8 left-8 h-16 w-16 border-t-2 border-l-2 border-neon-pink opacity-30" />
       <div className="absolute right-8 bottom-8 h-16 w-16 border-r-2 border-b-2 border-neon-green opacity-30" />
 
-      <div className="relative z-10 mb-12 text-center">
+      <div className="relative z-10 mb-6 shrink-0 text-center md:mb-12">
         <h2
           ref={titleRef}
           className="font-heading text-4xl font-bold tracking-tight text-white md:text-6xl"
@@ -162,58 +184,64 @@ export function DatebilitySection() {
         </p>
       </div>
 
-      <div className="relative z-10 w-full max-w-3xl">
-        {ratings.map((item, index) => (
-          <div key={item.trait}>
-            <div
-              ref={(el) => { rowsRef.current[index] = el; }}
-              className="group flex flex-col gap-3 py-5 transition-colors duration-200 hover:bg-white/2 md:flex-row md:items-center md:gap-6 md:px-4"
-            >
-              {/* Index number */}
-              <span
-                className="font-heading text-3xl font-bold md:text-4xl"
-                style={{ color: item.color }}
+      <div
+        ref={listWrapperRef}
+        className="relative z-10 w-full max-w-3xl flex-1 overflow-hidden"
+        style={{
+          maskImage: "linear-gradient(to bottom, transparent 0%, black 5%, black 90%, transparent 100%)",
+          WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 5%, black 90%, transparent 100%)",
+        }}
+      >
+        <div ref={listInnerRef}>
+          {ratings.map((item, index) => (
+            <div key={item.trait}>
+              <div
+                ref={(el) => { rowsRef.current[index] = el; }}
+                className="group flex flex-col gap-2 py-3 transition-colors duration-200 hover:bg-white/2 md:flex-row md:items-center md:gap-6 md:py-5 md:px-4"
               >
-                {String(index + 1).padStart(2, "0")}
-              </span>
-
-              {/* Trait text */}
-              <p className="flex-1 text-sm leading-relaxed text-white/80 md:text-base">
-                {item.trait}
-              </p>
-
-              {/* Star rating + progress */}
-              <div className="flex flex-col gap-2">
-                <StarRating rating={item.stars} color={item.color} />
-                <div
-                  ref={(el) => { progressRefs.current[index] = el; }}
-                  className="w-full md:w-48"
+                <span
+                  className="font-heading text-2xl font-bold md:text-4xl"
+                  style={{ color: item.color }}
                 >
-                  <Progress
-                    value={(item.stars / 5) * 100}
-                    className="h-1.5 bg-white/10"
-                    style={
-                      {
-                        "--progress-color": item.color,
-                      } as React.CSSProperties
-                    }
-                  />
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+
+                <p className="flex-1 text-sm leading-relaxed text-white/80 md:text-base">
+                  {item.trait}
+                </p>
+
+                <div className="flex flex-col gap-1.5">
+                  <StarRating rating={item.stars} color={item.color} />
+                  <div
+                    ref={(el) => { progressRefs.current[index] = el; }}
+                    className="w-full md:w-48"
+                  >
+                    <Progress
+                      value={(item.stars / 5) * 100}
+                      className="h-1.5 bg-white/10"
+                      style={
+                        {
+                          "--progress-color": item.color,
+                        } as React.CSSProperties
+                      }
+                    />
+                  </div>
                 </div>
               </div>
+
+              {index < ratings.length - 1 && (
+                <Separator className="bg-white/5" />
+              )}
             </div>
+          ))}
 
-            {index < ratings.length - 1 && (
-              <Separator className="bg-white/5" />
-            )}
+          {/* Footer tagline at the end of the list */}
+          <div className="mt-8 pb-4 text-center">
+            <p className="font-heading text-xs tracking-[0.3em] text-white/20 uppercase">
+              If you scrolled this far, you&apos;re already interested
+            </p>
           </div>
-        ))}
-      </div>
-
-      {/* Footer tagline */}
-      <div className="relative z-10 mt-12 text-center">
-        <p className="font-heading text-xs tracking-[0.3em] text-white/20 uppercase">
-          If you scrolled this far, you&apos;re already interested
-        </p>
+        </div>
       </div>
 
       {/* Bottom accent line */}
