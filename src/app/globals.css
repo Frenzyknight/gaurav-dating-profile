@@ -1,26 +1,143 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-space-grotesk);
+  --font-mono: var(--font-space-mono);
+
+  --color-neon-green: #00F5A0;
+  --color-neon-pink: #FF2D87;
+  --color-neon-yellow: #FFE600;
+  --color-surface: #1A1A1A;
+  --color-surface-light: #2A2A2A;
+
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
+  --radius-2xl: 0px;
+  --radius-3xl: 0px;
+  --radius-4xl: 0px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  --radius: 0px;
+  --background: #0D0D0D;
+  --foreground: #FFFFFF;
+  --card: #1A1A1A;
+  --card-foreground: #FFFFFF;
+  --popover: #1A1A1A;
+  --popover-foreground: #FFFFFF;
+  --primary: #00F5A0;
+  --primary-foreground: #0D0D0D;
+  --secondary: #2A2A2A;
+  --secondary-foreground: #FFFFFF;
+  --muted: #2A2A2A;
+  --muted-foreground: #888888;
+  --accent: #FFE600;
+  --accent-foreground: #0D0D0D;
+  --destructive: #FF2D87;
+  --border: #333333;
+  --input: #333333;
+  --ring: #00F5A0;
+  --chart-1: #00F5A0;
+  --chart-2: #FF2D87;
+  --chart-3: #FFE600;
+  --chart-4: #00D4FF;
+  --chart-5: #B84DFF;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+    border-radius: 0 !important;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-space-grotesk), sans-serif;
+  }
+
+  ::selection {
+    background: #00F5A0;
+    color: #0D0D0D;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer utilities {
+  .neopop-shadow-green {
+    box-shadow: 4px 4px 0px #00F5A0;
+  }
+  .neopop-shadow-pink {
+    box-shadow: 4px 4px 0px #FF2D87;
+  }
+  .neopop-shadow-yellow {
+    box-shadow: 4px 4px 0px #FFE600;
+  }
+  .neopop-shadow-white {
+    box-shadow: 4px 4px 0px #FFFFFF;
+  }
+
+  .neopop-border {
+    border: 2px solid #FFFFFF;
+  }
+  .neopop-border-green {
+    border: 2px solid #00F5A0;
+  }
+  .neopop-border-pink {
+    border: 2px solid #FF2D87;
+  }
+  .neopop-border-yellow {
+    border: 2px solid #FFE600;
+  }
+
+  .font-heading {
+    font-family: var(--font-space-mono), monospace;
+  }
+
+  .text-gradient-neon {
+    background: linear-gradient(135deg, #00F5A0, #FFE600, #FF2D87);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
 }
